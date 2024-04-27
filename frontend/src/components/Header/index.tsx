@@ -1,10 +1,14 @@
 import { Button, Navbar, TextInput } from "flowbite-react"
 import { AiOutlineSearch } from "react-icons/ai"
 import { FaMoon } from "react-icons/fa"
+import { useSelector } from "react-redux"
 import { Link, useLocation } from "react-router-dom"
+import { RootState } from "../../redux/store"
 
 const Header = () => {
-    const path = useLocation().pathname
+    const path = useLocation().pathname;
+    const token = useSelector((state: RootState) => state.user.currentUser?.token)
+    console.log("🚀 ~ Header ~ state:", token)
     return (
         <Navbar>
             <Link to={"/"} className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">

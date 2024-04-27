@@ -8,24 +8,28 @@ import toast from "react-hot-toast";
 import { Spinner } from "flowbite-react";
 import { handleError } from "../../helpers/helpers";
 import { FormDataSignin, UserSchemaSignin } from "../../types/types";
+import { useDispatch } from "react-redux";
+import { signInSuccess } from "../../redux/user/userSlice";
+import Oauth from "../../components/Oauth";
 
 const SignIn = () => {
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const { register, handleSubmit, formState: { errors } } = useForm<FormDataSignin>({
         resolver: zodResolver(UserSchemaSignin),
     });
-    console.log("🚀 ~ SignIn ~ errors:", errors)
     const onSubmit = async (data: FormDataSignin) => {
-        console.log("🚀 ~ onSubmit ~ data:", data)
         try {
             setLoading(true)
             const { status, data: response } = await axios.post("/api/v1/auth/signin", data)
             console.log("🚀 ~ onSubmit ~ response:", response)
+            const user = { ...response.user, token: response.token };
+            console.log("🚀 ~ onSubmit ~ user:", user)
             if (status === 200) {
-                navigate("/")
-                return toast.success("Logged in", {
+                dispatch(signInSuccess(user))
+                // navigate("/")
+                return toast.success("🚀 Logged in successfully!", {
                     duration: 2000,
                     position: "bottom-right"
                 })
@@ -65,6 +69,7 @@ const SignIn = () => {
                         <Button gradientDuoTone={"purpleToPink"} type="submit">
                             {loading ? <Spinner color="info" size="md" /> : "Sign In"}
                         </Button>
+                        <Oauth />
                         <div className="flex gap-2 text-sm mt-3">
                             <span>Already have an account?</span>
                             <Link to={"/sign-up"} className="text-blue-500">

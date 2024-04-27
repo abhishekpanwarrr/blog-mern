@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { Spinner } from "flowbite-react";
 import { handleError } from "../../helpers/helpers";
 import { FormDataSignup, UserSchemaSignup } from "../../types/types";
+import Oauth from "../../components/Oauth";
 
 
 const SignUp = () => {
@@ -65,6 +66,7 @@ const SignUp = () => {
                         <Button gradientDuoTone={"purpleToPink"} type="submit">
                             {loading ? <Spinner color="info" size="md" /> : "Sign up"}
                         </Button>
+                        <Oauth />
                         <div className="flex gap-2 text-sm mt-3">
                             <span>Have an account?</span>
                             <Link to={"/sign-in"} className="text-blue-500">

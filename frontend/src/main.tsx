@@ -9,6 +9,9 @@ import SignIn from './pages/SignIn/index.tsx'
 import SignUp from './pages/SignUp/index.tsx'
 import Dashboard from './pages/Dashboard/index.tsx'
 import Projects from './pages/Projects/index.tsx'
+import { store, persistor } from './redux/store.ts'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path="/" element={<Layout />}>
@@ -24,6 +27,10 @@ const router = createBrowserRouter(createRoutesFromElements(
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <PersistGate persistor={persistor}>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </PersistGate>
   </React.StrictMode>,
 )
