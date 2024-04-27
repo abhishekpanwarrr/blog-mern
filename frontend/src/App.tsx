@@ -1,6 +1,9 @@
+import { Button } from "flowbite-react"
+import Home from "./pages/Home"
+
 const App = () => {
   return (
-    <div className="bg-red-500">App</div>
+    <Home />
   )
 }
 
