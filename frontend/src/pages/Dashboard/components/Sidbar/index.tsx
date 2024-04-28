@@ -6,7 +6,6 @@ const Sidebar = () => {
     const location = useLocation();
     const [tab, setTab] = useState("");
 
-
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search)
         const tabFromUrl = urlParams.get('tab');
@@ -20,7 +19,7 @@ const Sidebar = () => {
             <Bar.Items>
                 <Bar.ItemGroup>
                     <Link to="/dashboard?tab=profile">
-                        <Bar.Item active={tab === "profile"} icon={HiUser} label="User" labelColor="dark">
+                        <Bar.Item as="div" active={tab === "profile"} icon={HiUser} label="User" labelColor="dark">
                             Profile
                         </Bar.Item>
                     </Link>

@@ -4,7 +4,7 @@ interface User {
     createdAt?: string;
     email: string;
     fullName: string;
-    token: string;
+    token?: string;
     updatedAt?: string;
     __v?: number;
     _id?: string;
