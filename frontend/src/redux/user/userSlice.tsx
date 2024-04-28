@@ -8,6 +8,7 @@ interface User {
     updatedAt?: string;
     __v?: number;
     _id?: string;
+    profilePicture: string
 }
 interface UserState {
     currentUser: User | null;
