@@ -35,7 +35,12 @@ const SignIn = () => {
                 })
             }
         } catch (error: any) {
-            console.log("🚀 ~ onSubmit ~ error:", error)
+            if (error.response.status === 401) {
+                return toast.error("❌ User not found. Register first.", {
+                    duration: 3000,
+                    position: "bottom-right"
+                })
+            }
             handleError(error)
         } finally {
             setLoading(false)

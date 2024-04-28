@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../../../redux/store"
-import { Alert, Button, Spinner, TextInput } from "flowbite-react"
+import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react"
 import { useEffect, useRef, useState } from "react"
 import { getDownloadURL, getStorage, uploadBytesResumable, ref } from "firebase/storage"
 import { app } from "../../../../firebase/firebase"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from "axios"
-import { signInSuccess } from "../../../../redux/user/userSlice"
+import { logout, signInSuccess } from "../../../../redux/user/userSlice"
 import toast from "react-hot-toast"
-import { HiLockClosed, HiLockOpen, HiMail, HiUser } from "react-icons/hi"
+import { HiLockClosed, HiLockOpen, HiMail, HiOutlineExclamationCircle, HiUser } from "react-icons/hi"
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -23,6 +23,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(false)
     const [updateUserError, setUpdateUserError] = useState<any>(null);
     const [visible, setVisible] = useState(false)
+    const [showModal, setShowModal] = useState(false)
     const filePickerRef = useRef();
 
     const handleImageChange = (e: { target: { files: any[] } }) => {
@@ -106,6 +107,25 @@ const Profile = () => {
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            const response = await axios.delete(`/api/v1/user/delete/${currentUser?._id}`);
+            console.log("🚀 ~ handleDelete ~ response:", response)
+            if (response.status === 200) {
+                dispatch(logout())
+                return toast.success("Account delete successfully!.", {
+                    position: "bottom-right",
+                    duration: 4000
+                })
+            }
+        } catch (error) {
+            return toast.error("Failed to delete account", {
+                position: "bottom-right",
+                duration: 2000
+            });
+        }
+    }
+
     useEffect(() => {
         if (imageFile) {
             uploadImage();
@@ -170,9 +190,33 @@ const Profile = () => {
                 </Button>
             </form>
             <div className="text-red-500 flex justify-around mt-5">
-                <span className="cursor-pointer">Delete Account</span>
-                <span className="cursor-pointer">Sign out</span>
+                <span className="cursor-pointer" onClick={() => setShowModal(true)}>Delete Account</span>
+                <span className="cursor-pointer" onClick={() => dispatch(logout())}>Sign out</span>
             </div>
+            <Modal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                popup
+                size='md'
+            >
+                <Modal.Header />
+                <Modal.Body>
+                    <div className='text-center'>
+                        <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+                        <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+                            Are you sure you want to delete your account?
+                        </h3>
+                        <div className='flex justify-center gap-4'>
+                            <Button color='failure' onClick={handleDelete}>
+                                Yes, I'm sure
+                            </Button>
+                            <Button color='gray' onClick={() => setShowModal(false)}>
+                                No, cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     )
 }

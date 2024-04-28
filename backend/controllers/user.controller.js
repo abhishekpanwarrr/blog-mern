@@ -24,6 +24,7 @@ const createGoolgeUser = async (req, res) => {
     console.log(`Error at creating a Google User ${error}`);
   }
 };
+
 const updateUser = async (req, res) => {
   if (req.user._id !== req.params.userId) {
     return res
@@ -59,4 +60,18 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { createGoolgeUser, updateUser };
+const deleteUser = async (req, res) => {
+  try {
+    if (req.user._id !== req.params.userId) {
+      return res
+        .status(401)
+        .json({ msg: "You are not authorized to perform this action" });
+    }
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json({ msg: "User has been deleted" });
+  } catch (error) {
+    console.log("🚀 ~ deleteUser ~ error:", error);
+    res.status(500).json({ msg: error.message });
+  }
+};
+export { createGoolgeUser, updateUser, deleteUser };
