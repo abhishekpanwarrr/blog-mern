@@ -6,8 +6,10 @@ import { app } from "../../firebase/firebase"
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { signInSuccess } from "../../redux/user/userSlice"
+import { useNavigate } from "react-router-dom"
 
 const Oauth = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const auth = getAuth(app)
     const handleGoogleClick = async () => {
@@ -23,16 +25,18 @@ const Oauth = () => {
                 // @ts-ignore
                 password: `${await resultFromGoogle.user?.accessToken}`,
             }
-            console.log("🚀 ~ handleGoogleClick ~ user:", user)
             const response = await axios.post("/api/v1/user/google", user);
-            if (response.status === 201) {
+            console.log("🚀 ~ handleGoogleClick ~ response:", response.data)
+            if (response.status === 200) {
                 dispatch(signInSuccess({
                     fullName: user.fullName,
                     email: user.email,
+                    isAdmin: response.data.isAdmin,
                     // @ts-ignore
-                    token: resultFromGoogle?.user?.accessToken,
+                    password: resultFromGoogle?.user?.accessToken,
                     profilePicture: `${resultFromGoogle.user?.photoURL}`
                 }))
+                navigate("/")
             }
         } catch (error) {
             handleError(error)

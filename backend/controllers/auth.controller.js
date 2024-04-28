@@ -53,9 +53,13 @@ const loginUser = async (req, res) => {
     if (!validPass) {
       return res.status(401).json({ msg: "Invalid Email or Password" });
     }
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { _id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
     // Create a new object without the password property
     const userWithoutPassword = { ...user._doc };
     delete userWithoutPassword.password;

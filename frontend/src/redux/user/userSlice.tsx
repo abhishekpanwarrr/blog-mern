@@ -8,6 +8,7 @@ interface User {
     updatedAt?: string;
     __v?: number;
     _id?: string;
+    isAdmin?: boolean;
     profilePicture: string
 }
 interface UserState {
