@@ -1,20 +1,22 @@
 import { Button, Label, TextInput } from "flowbite-react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Spinner } from "flowbite-react";
 import { handleError } from "../../helpers/helpers";
 import { FormDataSignin, UserSchemaSignin } from "../../types/types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signInSuccess } from "../../redux/user/userSlice";
 import Oauth from "../../components/Oauth";
+import { RootState } from "../../redux/store";
 
 const SignIn = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const currentUser = useSelector((state: RootState) => state.user.currentUser);
     const [loading, setLoading] = useState(false)
     const { register, handleSubmit, formState: { errors } } = useForm<FormDataSignin>({
         resolver: zodResolver(UserSchemaSignin),
@@ -23,12 +25,10 @@ const SignIn = () => {
         try {
             setLoading(true)
             const { status, data: response } = await axios.post("/api/v1/auth/signin", data)
-            console.log("🚀 ~ onSubmit ~ response:", response)
             const user = { ...response.user, token: response.token };
-            console.log("🚀 ~ onSubmit ~ user:", user)
             if (status === 200) {
                 dispatch(signInSuccess(user))
-                // navigate("/")
+                navigate("/")
                 return toast.success("🚀 Logged in successfully!", {
                     duration: 2000,
                     position: "bottom-right"
@@ -41,6 +41,11 @@ const SignIn = () => {
             setLoading(false)
         }
     }
+    useEffect(() => {
+        if (currentUser) {
+            navigate('/')
+        }
+    }, [])
     return (
         <div className="min-h-screen mt-20">
             <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">

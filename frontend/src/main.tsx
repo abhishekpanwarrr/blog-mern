@@ -12,6 +12,8 @@ import Projects from './pages/Projects/index.tsx'
 import { store, persistor } from './redux/store.ts'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import ThemeProvider from './pages/ThemeProvider.tsx'
+import PrivateRoute from './pages/PrivateRoute/index.tsx'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path="/" element={<Layout />}>
@@ -20,7 +22,9 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path="/projects" element={<Projects />} />
     <Route path="sign-in" element={<SignIn />} />
     <Route path="/sign-up" element={<SignUp />} />
-    <Route path="/dashboard" element={<Dashboard />} />
+    <Route element={<PrivateRoute />}>
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Route>
     <Route path="*" element={<h3>404 Page</h3>} />
   </Route>
 ));
@@ -29,7 +33,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <PersistGate persistor={persistor}>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </Provider>
     </PersistGate>
   </React.StrictMode>,

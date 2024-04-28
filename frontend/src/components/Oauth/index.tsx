@@ -19,9 +19,8 @@ const Oauth = () => {
             const user = {
                 fullName: `${resultFromGoogle.user?.displayName}`,
                 email: `${resultFromGoogle.user?.email}`,
-                id: `${resultFromGoogle.user?.uid}`,
                 photoUrl: `${resultFromGoogle.user?.photoURL}`,
-                token: `${await resultFromGoogle.user?.accessToken}`,
+                // @ts-ignore
                 password: `${await resultFromGoogle.user?.accessToken}`,
             }
             console.log("🚀 ~ handleGoogleClick ~ user:", user)
@@ -30,7 +29,9 @@ const Oauth = () => {
                 dispatch(signInSuccess({
                     fullName: user.fullName,
                     email: user.email,
-                    token: user.token
+                    // @ts-ignore
+                    token: resultFromGoogle?.user?.accessToken,
+                    profilePicture: `${resultFromGoogle.user?.photoURL}`
                 }))
             }
         } catch (error) {
