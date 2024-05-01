@@ -29,6 +29,7 @@ const Oauth = () => {
             console.log("🚀 ~ handleGoogleClick ~ response:", response.data)
             if (response.status === 200) {
                 dispatch(signInSuccess({
+                    _id: response.data._id,
                     fullName: user.fullName,
                     email: user.email,
                     isAdmin: response.data.isAdmin,
